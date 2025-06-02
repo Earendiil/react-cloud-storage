@@ -12,7 +12,7 @@ export default function DashboardPage() {
 
   const fetchFiles = async () => {
     try {
-      const res = await api.get(`/user/files/${user.id}`);
+      const res = await api.get(`user/files/${user.id}`);
       setFiles(res.data);
     } catch (err) {
       console.error(err);
@@ -26,7 +26,7 @@ export default function DashboardPage() {
     formData.append('file', selectedFile);
 
     try {
-      await api.post(`api/upload/${user.id}`, formData);
+      await api.post(`upload/${user.id}`, formData);
       setSelectedFile(null);
       fetchFiles();
     } catch (err) {

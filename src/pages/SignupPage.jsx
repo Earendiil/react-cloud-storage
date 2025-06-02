@@ -22,7 +22,7 @@ const SignUpPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8080/api/create', formData);
+      await axios.post('http://localhost:8080/create', formData);
       toast.success('Account created! You can now log in.');
       navigate('/');
     } catch (err) {
