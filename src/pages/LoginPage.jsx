@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/apiCLient';
+import { toast } from 'react-toastify';
 
 export default function LoginPage() {
   const [input, setInput] = useState('');
@@ -17,10 +18,11 @@ export default function LoginPage() {
     try {
       const res = await api.post('/auth/login', { input, password });
       login(res.data); // Save token + user
+      toast.success('Login successful!')
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      setError('Invalid username/email or password');
+      toast.error('Invalid username/email or password');
     }
   };
 

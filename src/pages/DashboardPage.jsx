@@ -26,7 +26,7 @@ export default function DashboardPage() {
     formData.append('file', selectedFile);
 
     try {
-      await api.post(`/upload/${user.id}`, formData);
+      await api.post(`api/upload/${user.id}`, formData);
       setSelectedFile(null);
       fetchFiles();
     } catch (err) {
