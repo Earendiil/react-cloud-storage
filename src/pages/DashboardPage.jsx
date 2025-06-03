@@ -1,4 +1,3 @@
-// src/pages/DashboardPage.jsx
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -44,47 +43,76 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Welcome, {user.username}</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+    <div className="min-h-screen bg-gray-500 py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto bg-orange-100 rounded-2xl shadow-md p-8">
+        {/* Header */}
+        <div className="flex justify-between items-center border-b pb-4 mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">
+            Welcome, {user.username}
+          </h1>
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+          >
+            Logout
+          </button>
+        </div>
+
+        {/* Upload Form */}
+        <form
+          onSubmit={handleUpload}
+          className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8"
         >
-          Logout
-        </button>
+          <input
+            type="file"
+            onChange={(e) => setSelectedFile(e.target.files[0])}
+            className="block w-full sm:w-auto border border-gray-300 rounded-md p-2 text-sm file:mr-4"
+            required
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            Upload
+          </button>
+        </form>
+
+        {/* Files List */}
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+            Your Files
+          </h2>
+          {files.length > 0 ? (
+            <ul className="space-y-4">
+              {files.map((file) => (
+                <li
+                  key={file.fileId}
+                  className="flex justify-between items-center bg-gray-100 p-4 rounded-lg"
+                >
+                  <div>
+                    <p className="font-medium text-gray-800">
+                      {file.originalFileName}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {(file.size / 1024).toFixed(1)} KB •{' '}
+                      {new Date(file.uploadDate).toLocaleString()}
+                    </p>
+                  </div>
+                  <a
+                    href={`http://localhost:8080/download/${file.fileId}`}
+                    className="text-blue-600 hover:underline text-sm"
+                    download
+                  >
+                    Download
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500 italic">No files uploaded yet.</p>
+          )}
+        </div>
       </div>
-
-      <form onSubmit={handleUpload} className="mb-6 flex gap-4">
-        <input
-          type="file"
-          onChange={(e) => setSelectedFile(e.target.files[0])}
-          className="border p-2 rounded"
-          required
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Upload
-        </button>
-      </form>
-
-      <h2 className="text-xl font-semibold mb-4">Your Files:</h2>
-      <ul>
-        {files.map((file) => (
-          <li key={file.fileId} className="mb-2">
-            {file.originalFileName} ({(file.size / 1024).toFixed(1)} KB) —{' '}
-            <a
-              href={`http://localhost:8080/download/${file.fileId}`}
-              className="text-blue-600 underline"
-              download
-            >
-              Download
-            </a>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
