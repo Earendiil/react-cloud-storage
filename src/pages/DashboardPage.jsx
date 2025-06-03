@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/apiCLient';
+import { downloadFile } from '../utils/downloadFile';
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -98,13 +99,13 @@ export default function DashboardPage() {
                       {new Date(file.uploadDate).toLocaleString()}
                     </p>
                   </div>
-                  <a
-                    href={`http://localhost:8080/download/${file.fileId}`}
-                    className="text-blue-600 hover:underline text-sm"
-                    download
-                  >
-                    Download
-                  </a>
+                  <button
+                      onClick={() => downloadFile(file.fileId, file.originalFileName)}
+                      className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
+                    >
+                      Download
+                  </button>
+
                 </li>
               ))}
             </ul>
