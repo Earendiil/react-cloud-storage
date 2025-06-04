@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUpPage from './pages/SignupPage';
 import { ToastContainer } from 'react-toastify';
+import ProtectedRoute from './routes/ProtextedRoute';
 
 
 function App() {
@@ -14,7 +15,14 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
     <ToastContainer/>

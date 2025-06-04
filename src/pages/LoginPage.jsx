@@ -27,7 +27,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-screen bg-gray-300">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg p-6 w-full max-w-sm"
@@ -53,12 +53,13 @@ export default function LoginPage() {
         />
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 pb-2 mb-1"
         >
           Log In
         </button>
+        <p>Don't have an account? <a className='text-cyan-400 underline' href="/signup">Sign up</a></p>
       </form>
-      <p>Don't have an account? <a href="/signup">Sign up</a></p>
+      
     </div>
   );
 }
