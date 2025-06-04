@@ -8,8 +8,10 @@ const SignUpPage = () => {
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
 
+  const [formErrors, setFormErrors] = useState({});
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,49 +19,105 @@ const SignUpPage = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+    setFormErrors(prev => ({ ...prev, [e.target.name]: '' })); 
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post('http://localhost:8080/create', formData);
-      toast.success('Account created! You can now log in.');
-      navigate('/');
-    } catch (err) {
-      console.error(err);
-      toast.error('Registration failed.');
-    }
-  };
+  e.preventDefault();
+  setFormErrors({});
+
+  try {
+    await axios.post('http://localhost:8080/api/create', formData);
+    toast.success('Account created! You can now log in.');
+    navigate('/');
+  } catch (err) {
+  if (err.response?.data?.errors) {
+    setFormErrors(err.response.data.errors); 
+  } else if (err.response?.data?.message) {
+    toast.error(err.response.data.message);
+  } else {
+    toast.error('Registration failed.');
+  }
+  }
+};
 
   return (
-    <div>
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        /><br/>
-        <input
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          type="email"
-          required
-        /><br/>
-        <input
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          type="password"
-          required
-        /><br/>
-        <button type="submit">Sign Up</button>
-      </form>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md bg-white p-8 rounded shadow">
+        <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Username */}
+          <div>
+            <input
+              name="username"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+              required
+            />
+            {formErrors.username && (
+              <p className="text-red-500 text-sm mt-1">{formErrors.username}</p>
+            )}
+          </div>
+
+          {/* Email */}
+          <div>
+            <input
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+              type="email"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+              required
+            />
+            {formErrors.email && (
+              <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
+            )}
+          </div>
+
+          {/* Password */}
+          <div>
+            <input
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              type="password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+              required
+            />
+            {formErrors.password && (
+              <p className="text-red-500 text-sm mt-1">{formErrors.password}</p>
+            )}
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <input
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              type="password"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+              required
+            />
+            {formErrors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">{formErrors.confirmPassword}</p>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          >
+            Sign Up
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
