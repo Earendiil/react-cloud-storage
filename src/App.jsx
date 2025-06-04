@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUpPage from './pages/SignupPage';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './routes/ProtextedRoute';
+import ChangePasswordPage from './pages/ChangePasswordPage';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/change-password" element={<ChangePasswordPage />} />
       </Routes>
     </Router>
     <ToastContainer/>

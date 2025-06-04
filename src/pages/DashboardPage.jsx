@@ -1,47 +1,20 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import api from '../api/apiCLient';
 import { downloadFile } from '../utils/downloadFile';
+import { useDashboard } from '../hooks/useDashboard';
+import { useNavigate } from 'react-router-dom';
+
+
 
 export default function DashboardPage() {
-  const { user, logout } = useAuth();
-  const [files, setFiles] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const {
+    user,
+    files,
+    selectedFile,
+    setSelectedFile,
+    handleUpload,
+    handleLogout,
+  } = useDashboard();
+
   const navigate = useNavigate();
-
-  const fetchFiles = async () => {
-    try {
-      const res = await api.get(`user/files/${user.id}`);
-      setFiles(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!selectedFile) return;
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-
-    try {
-      await api.post(`upload/${user.id}`, formData);
-      setSelectedFile(null);
-      fetchFiles();
-    } catch (err) {
-      console.error('Upload failed:', err);
-    }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
-
-  useEffect(() => {
-    fetchFiles();
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-500 py-10 px-4 sm:px-6 lg:px-8">
@@ -51,9 +24,15 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold text-gray-800">
             Welcome, {user.username}
           </h1>
+           <button
+          onClick={() => navigate('/change-password')}
+          className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition"
+        >
+          Change Password
+        </button>
           <button
             onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+            className="align- bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
           >
             Logout
           </button>
@@ -90,8 +69,8 @@ export default function DashboardPage() {
                   key={file.fileId}
                   className="flex justify-between items-center bg-green-400 p-4 rounded-lg"
                 >
-                  <div >
-                    <p className="font-medium text-gray-800 bg">
+                  <div>
+                    <p className="font-medium text-gray-800">
                       {file.fileName}
                     </p>
                     <p className="text-sm text-gray-900">
@@ -99,21 +78,24 @@ export default function DashboardPage() {
                       {new Date(file.uploadDate).toLocaleString()}
                     </p>
                   </div>
-                  <button 
-                      onClick={() => downloadFile(file.fileId, file.fileName)}
-                      className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
-                    >
-                      Download
+                  <button
+                    onClick={() =>
+                      downloadFile(file.fileId, file.fileName)
+                    }
+                    className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
+                  >
+                    Download
                   </button>
-
                 </li>
               ))}
             </ul>
           ) : (
             <p className="text-gray-500 italic">No files uploaded yet.</p>
           )}
-        </div>
+        </div> 
+       
       </div>
+      
     </div>
   );
 }
