@@ -67,7 +67,7 @@ export default function DashboardPage() {
           <input
             type="file"
             onChange={(e) => setSelectedFile(e.target.files[0])}
-            className="block w-full sm:w-auto border border-gray-300 rounded-md p-2 text-sm file:mr-4"
+            className="block w-full sm:w-auto border bg-amber-50 border-gray-500 rounded-md p-2 text-sm file:mr-4"
             required
           />
           <button
@@ -88,19 +88,19 @@ export default function DashboardPage() {
               {files.map((file) => (
                 <li
                   key={file.fileId}
-                  className="flex justify-between items-center bg-gray-100 p-4 rounded-lg"
+                  className="flex justify-between items-center bg-green-400 p-4 rounded-lg"
                 >
-                  <div>
-                    <p className="font-medium text-gray-800">
-                      {file.originalFileName}
+                  <div >
+                    <p className="font-medium text-gray-800 bg">
+                      {file.fileName}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-900">
                       {(file.size / 1024).toFixed(1)} KB •{' '}
                       {new Date(file.uploadDate).toLocaleString()}
                     </p>
                   </div>
-                  <button
-                      onClick={() => downloadFile(file.fileId, file.originalFileName)}
+                  <button 
+                      onClick={() => downloadFile(file.fileId, file.fileName)}
                       className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
                     >
                       Download

@@ -5,7 +5,7 @@ import DashboardPage from './pages/DashboardPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUpPage from './pages/SignupPage';
 import { ToastContainer } from 'react-toastify';
-import ProtectedRoute from './routes/ProtectedRoute';
+import ProtectedRoute from './routes/ProtextedRoute';
 
 
 function App() {
