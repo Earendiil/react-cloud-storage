@@ -1,6 +1,9 @@
 import { downloadFile } from '../utils/downloadFile';
 import { useDashboard } from '../hooks/useDashboard';
 import { useNavigate } from 'react-router-dom';
+import { deleteFile } from '../utils/deleteFile';
+import api from '../api/apiCLient';
+
 
 
 
@@ -9,12 +12,18 @@ export default function DashboardPage() {
     user,
     files,
     selectedFile,
+    setFiles,
     setSelectedFile,
     handleUpload,
     handleLogout,
+    confirmDelete,
   } = useDashboard();
 
   const navigate = useNavigate();
+
+ 
+
+
 
   return (
     <div className="min-h-screen bg-gray-500 py-10 px-4 sm:px-6 lg:px-8">
@@ -65,28 +74,35 @@ export default function DashboardPage() {
           {files.length > 0 ? (
             <ul className="space-y-4">
               {files.map((file) => (
-                <li
+               <li
                   key={file.fileId}
                   className="flex justify-between items-center bg-green-400 p-4 rounded-lg"
                 >
                   <div>
-                    <p className="font-medium text-gray-800">
-                      {file.fileName}
-                    </p>
+                    <p className="font-medium text-gray-800">{file.fileName}</p>
                     <p className="text-sm text-gray-900">
                       {(file.size / 1024).toFixed(1)} KB •{' '}
                       {new Date(file.uploadDate).toLocaleString()}
                     </p>
                   </div>
-                  <button
-                    onClick={() =>
-                      downloadFile(file.fileId, file.fileName)
-                    }
-                    className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
-                  >
-                    Download
-                  </button>
+
+                  <div className="flex gap-2 ml-auto">
+                    <button
+                      onClick={() => downloadFile(file.fileId, file.fileName)}
+                      className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
+                    >
+                      Download
+                    </button>
+                   <button
+                      onClick={() => confirmDelete(file.fileId, file.fileName)}
+                      className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition"
+                    >
+                      Delete
+                    </button>
+
+                  </div>
                 </li>
+
               ))}
             </ul>
           ) : (

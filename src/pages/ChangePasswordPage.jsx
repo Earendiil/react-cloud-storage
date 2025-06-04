@@ -87,7 +87,7 @@ export default function ChangePasswordPage() {
 
         <button
           onClick={() => navigate('/dashboard')}
-          className="mt-4 text-sm text-blue-500 hover:underline"
+          className="mt-4 text-sm  text-blue-500 hover:underline"
         >
           ← Back to Dashboard
         </button>

@@ -33,6 +33,22 @@ export function useDashboard() {
     }
   };
 
+  const handleDelete = async (fileId) => {
+  try {
+    await api.delete(`/user/files/${user.id}/${fileId}`);
+    setFiles(prevFiles => prevFiles.filter(file => file.fileId !== fileId));
+  } catch (err) {
+    console.error('Delete failed:', err);
+  }
+};
+
+const confirmDelete = (fileId, fileName) => {
+  if (window.confirm(`Are you sure you want to delete "${fileName}"?`)) {
+    handleDelete(fileId);
+  }
+};
+
+
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -45,7 +61,10 @@ export function useDashboard() {
   return {
     user,
     files,
+    setFiles,
     selectedFile,
+    handleDelete,
+    confirmDelete,
     setSelectedFile,
     handleUpload,
     handleLogout,
