@@ -23,7 +23,7 @@ export default function ChangePasswordPage() {
     }
 
     try {
-      await api.put(`api/user/${user.id}`, {
+      await api.put(`user/${user.id}`, {
         oldPassword,
         newPassword,
         confirmPassword,
@@ -43,7 +43,7 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300 px-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-md p-6">
         <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Change Password</h2>
 

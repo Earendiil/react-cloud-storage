@@ -18,10 +18,18 @@ export function useDashboard() {
     }
   };
 
+
   const handleUpload = async (e) => {
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
     e.preventDefault();
     if (!selectedFile) return;
     const formData = new FormData();
+
+    if (selectedFile.size > MAX_FILE_SIZE) {
+      alert("File size exceeds 5MB. Please choose a smaller file.");
+      return;
+  }
     formData.append('file', selectedFile);
 
     try {
@@ -33,6 +41,7 @@ export function useDashboard() {
     }
   };
 
+
   const handleDelete = async (fileId) => {
   try {
     await api.delete(`/user/files/${user.id}/${fileId}`);
@@ -42,11 +51,13 @@ export function useDashboard() {
   }
 };
 
+
 const confirmDelete = (fileId, fileName) => {
   if (window.confirm(`Are you sure you want to delete "${fileName}"?`)) {
     handleDelete(fileId);
   }
 };
+
 
 
   const handleLogout = () => {
@@ -58,6 +69,7 @@ const confirmDelete = (fileId, fileName) => {
     fetchFiles();
   }, []);
 
+  
   return {
     user,
     files,
