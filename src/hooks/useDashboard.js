@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/apiCLient';
 import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-toastify';
 
 export function useDashboard() {
   const { user, logout } = useAuth();
@@ -58,6 +59,21 @@ const confirmDelete = (fileId, fileName) => {
   }
 };
 
+const handleExpiryChange = async (fileId, newDate) => {
+  try {
+    const isoDate = new Date(newDate).toISOString(); // <- Convert to ISO 8601
+
+    await api.put(`/files/${fileId}/expiry`, {
+      expiryDate: isoDate,
+    });
+
+    toast("Expiry date updated");
+    // optionally: refetch or update local state
+  } catch (error) {
+    console.error(error);
+    toast.error("Error updating expiry date");
+  }
+};
 
 
   const handleLogout = () => {
@@ -80,5 +96,6 @@ const confirmDelete = (fileId, fileName) => {
     setSelectedFile,
     handleUpload,
     handleLogout,
+    handleExpiryChange,
   };
 }

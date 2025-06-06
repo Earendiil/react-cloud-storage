@@ -7,6 +7,7 @@ import api from '../api/apiCLient';
 
 
 
+
 export default function DashboardPage() {
   const {
     user,
@@ -17,6 +18,7 @@ export default function DashboardPage() {
     handleUpload,
     handleLogout,
     confirmDelete,
+    handleExpiryChange
   } = useDashboard();
 
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ export default function DashboardPage() {
           </h1>
            <button
           onClick={() => navigate('/change-password')}
-          className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition"
+          className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition"
         >
           Change Password
         </button>
@@ -74,34 +76,52 @@ export default function DashboardPage() {
           {files.length > 0 ? (
             <ul className="space-y-4">
               {files.map((file) => (
-               <li
-                  key={file.fileId}
-                  className="flex justify-between items-center bg-green-400 p-4 rounded-lg"
-                >
-                  <div>
-                    <p className="font-medium text-gray-800">{file.fileName}</p>
-                    <p className="text-sm text-gray-900">
-                      {(file.size / 1024).toFixed(1)} KB •{' '}
-                      {new Date(file.uploadDate).toLocaleString()}
-                    </p>
-                  </div>
+              <li
+                key={file.fileId}
+                className="flex justify-between items-center bg-green-400 p-4 rounded-lg"
+              >
+                <div>
+                  <p className="font-medium text-gray-800">{file.fileName}</p>
+                  <p className="text-sm text-gray-900">
+                    {(file.size / 1024).toFixed(1)} KB • {new Date(file.uploadDate).toLocaleString()}
+                  </p>
+                </div>
 
-                  <div className="flex gap-2 ml-auto">
-                    <button
-                      onClick={() => downloadFile(file.fileId, file.fileName)}
-                      className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
-                    >
-                      Download
-                    </button>
-                   <button
-                      onClick={() => confirmDelete(file.fileId, file.fileName)}
-                      className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition"
-                    >
-                      Delete
-                    </button>
-
+                <div className="flex items-center gap-4 ml-auto">
+                  {/* Expires At Box */}
+                <div className="flex flex-col items-end space-y-1 text-sm">
+                  <div className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded whitespace-nowrap">
+                    Expires at: {new Date(file.expiryDate).toLocaleDateString()}
                   </div>
-                </li>
+                  <input
+                    type="date"
+                    className="text-xs border rounded px-1"
+                    min={new Date(file.uploadDate).toISOString().split("T")[0]}
+                    max={new Date(new Date(file.uploadDate).getTime() + 30 * 24 * 60 * 60 * 1000)
+                      .toISOString()
+                      .split("T")[0]}
+                    value={file.expiryDate ? new Date(file.expiryDate).toISOString().split("T")[0] : ""}
+                    onChange={(e) => handleExpiryChange(file.fileId, e.target.value)}
+                  />
+                </div>
+
+
+                  {/* Action Buttons */}
+                  <button
+                    onClick={() => downloadFile(file.fileId, file.fileName)}
+                    className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
+                  >
+                    Download
+                  </button>
+                  <button
+                    onClick={() => confirmDelete(file.fileId, file.fileName)}
+                    className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+
 
               ))}
             </ul>
