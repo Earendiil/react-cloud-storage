@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/apiCLient';
+import api, { deleteAccount } from '../api/apiCLient';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 
@@ -9,6 +9,7 @@ export function useDashboard() {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
+  const expiryTimeout = useRef({});
 
   const fetchFiles = async () => {
     try {
@@ -59,27 +60,52 @@ const confirmDelete = (fileId, fileName) => {
   }
 };
 
-const handleExpiryChange = async (fileId, newDate) => {
-  try {
-    const isoDate = new Date(newDate).toISOString(); // <- Convert to ISO 8601
+ const handleExpiryChange = (fileId, newDate) => {
+    if (expiryTimeout.current[fileId]) {
+      clearTimeout(expiryTimeout.current[fileId]);
+    }
 
-    await api.put(`/files/${fileId}/expiry`, {
-      expiryDate: isoDate,
-    });
+    expiryTimeout.current[fileId] = setTimeout(async () => {
+      try {
+        const isoDate = new Date(newDate).toISOString();
 
-    toast("Expiry date updated");
-    // optionally: refetch or update local state
-  } catch (error) {
-    console.error(error);
-    toast.error("Error updating expiry date");
-  }
-};
+        await api.put(`/files/${fileId}/expiry`, {
+          expiryDate: isoDate,
+        });
 
+        setFiles(prevFiles =>
+          prevFiles.map(file =>
+            file.fileId === fileId ? { ...file, expiryDate: isoDate } : file
+          )
+        );
+
+        toast("Expiry date updated");
+      } catch (error) {
+        console.error(error);
+        toast.error("Error updating expiry date");
+      }
+    }, 500); // 0.5 seconds
+  };
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
+
+  const handleDeleteAccount = async(userId) =>{
+   const confirmed = window.confirm("Are you sure you want to delete your account and files? This action cannot be undone.");
+  if (confirmed) {
+    try {
+      await deleteAccount();
+      localStorage.clear(); // logout cleanup
+      navigate('/login');
+    } catch (error) {
+      alert("Failed to delete account.");
+      console.error(error);
+    }
+  }
+};
+
 
   useEffect(() => {
     fetchFiles();
@@ -97,5 +123,6 @@ const handleExpiryChange = async (fileId, newDate) => {
     handleUpload,
     handleLogout,
     handleExpiryChange,
+    handleDeleteAccount,
   };
 }

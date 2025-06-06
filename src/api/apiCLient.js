@@ -13,4 +13,9 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+export const deleteAccount = async (userId) => {
+  return await api.delete(`/delete/${userId}`);
+};
+
+
 export default api;

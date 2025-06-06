@@ -18,14 +18,13 @@ export default function DashboardPage() {
     handleUpload,
     handleLogout,
     confirmDelete,
-    handleExpiryChange
+    handleExpiryChange,
+    handleDeleteAccount,
   } = useDashboard();
 
   const navigate = useNavigate();
 
  
-
-
 
   return (
     <div className="min-h-screen bg-gray-500 py-10 px-4 sm:px-6 lg:px-8">
@@ -96,7 +95,7 @@ export default function DashboardPage() {
                   <input
                     type="date"
                     className="text-xs border rounded px-1"
-                    min={new Date(file.uploadDate).toISOString().split("T")[0]}
+                    min={new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
                     max={new Date(new Date(file.uploadDate).getTime() + 30 * 24 * 60 * 60 * 1000)
                       .toISOString()
                       .split("T")[0]}
@@ -131,7 +130,14 @@ export default function DashboardPage() {
         </div> 
        
       </div>
-      
+      <div className="mt-10 flex justify-center">
+          <button
+            onClick={handleDeleteAccount}
+            className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition"
+          >
+            Delete My Account
+          </button>
+        </div>
     </div>
   );
 }
