@@ -36,13 +36,13 @@ export default function DashboardPage() {
           </h1>
            <button
           onClick={() => navigate('/change-password')}
-          className="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition"
+          className="cursor-pointer bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition"
         >
           Change Password
         </button>
           <button
             onClick={handleLogout}
-            className="align- bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+            className="cursor-pointer align- bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
           >
             Logout
           </button>
@@ -61,7 +61,7 @@ export default function DashboardPage() {
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+            className="cursor-pointer bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
           >
             Upload
           </button>
@@ -94,7 +94,7 @@ export default function DashboardPage() {
                   </div>
                   <input
                     type="date"
-                    className="text-xs border rounded px-1"
+                    className="cursor-pointer text-xs border rounded px-1"
                     min={new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
                     max={new Date(new Date(file.uploadDate).getTime() + 30 * 24 * 60 * 60 * 1000)
                       .toISOString()
@@ -108,13 +108,13 @@ export default function DashboardPage() {
                   {/* Action Buttons */}
                   <button
                     onClick={() => downloadFile(file.fileId, file.fileName)}
-                    className="text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
+                    className="cursor-pointer text-sm text-white bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded transition"
                   >
                     Download
                   </button>
                   <button
                     onClick={() => confirmDelete(file.fileId, file.fileName)}
-                    className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition"
+                    className="cursor-pointer text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition"
                   >
                     Delete
                   </button>
@@ -130,10 +130,10 @@ export default function DashboardPage() {
         </div> 
        
       </div>
-      <div className="mt-10 flex justify-center">
+      <div className="cursor-pointer mt-10 flex justify-center">
           <button
             onClick={handleDeleteAccount}
-            className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition"
+            className="cursor-pointer bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition"
           >
             Delete My Account
           </button>

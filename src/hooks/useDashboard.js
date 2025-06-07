@@ -92,13 +92,15 @@ const confirmDelete = (fileId, fileName) => {
     navigate('/');
   };
 
-  const handleDeleteAccount = async(userId) =>{
-   const confirmed = window.confirm("Are you sure you want to delete your account and files? This action cannot be undone.");
+ const handleDeleteAccount = async () => {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete your account and files? This action cannot be undone."
+  );
   if (confirmed) {
     try {
       await deleteAccount();
-      localStorage.clear(); // logout cleanup
-      navigate('/login');
+      localStorage.clear(); // Logout cleanup
+      navigate("/");
     } catch (error) {
       alert("Failed to delete account.");
       console.error(error);
