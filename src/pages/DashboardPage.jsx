@@ -27,7 +27,7 @@ export default function DashboardPage() {
   const confirmAccountDelete = () => setShowAccountDeleteModal(true);
 
   return (
-    <div className="min-h-screen bg-gray-500 py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8" >
       <div className="max-w-4xl mx-auto bg-orange-100 rounded-2xl shadow-md p-8">
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-4 mb-6">

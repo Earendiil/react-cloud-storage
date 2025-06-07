@@ -7,12 +7,14 @@ import SignUpPage from './pages/SignupPage';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './routes/ProtextedRoute';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+import Layout from './components/Layout';
 
 
 function App() {
   return (
   <> 
     <Router>
+    <Layout>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
@@ -26,8 +28,9 @@ function App() {
         />
         <Route path="/change-password" element={<ChangePasswordPage />} />
       </Routes>
-    </Router>
-    <ToastContainer/>
+    </Layout>
+  </Router>
+  <ToastContainer />
   </>
   );
 }

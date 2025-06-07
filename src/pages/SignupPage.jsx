@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -23,26 +23,26 @@ const SignUpPage = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setFormErrors({});
+    e.preventDefault();
+    setFormErrors({});
 
-  try {
-    await axios.post('http://localhost:8080/api/create', formData);
-    toast.success('Account created! You can now log in.');
-    navigate('/');
-  } catch (err) {
-  if (err.response?.data?.errors) {
-    setFormErrors(err.response.data.errors); 
-  } else if (err.response?.data?.message) {
-    toast.error(err.response.data.message);
-  } else {
-    toast.error('Registration failed.');
-  }
-  }
-};
+    try {
+      await axios.post('http://localhost:8080/api/create', formData);
+      toast.success('Account created! You can now log in.');
+      navigate('/');
+    } catch (err) {
+      if (err.response?.data?.errors) {
+        setFormErrors(err.response.data.errors); 
+      } else if (err.response?.data?.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error('Registration failed.');
+      }
+    }
+  };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-300">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md bg-white p-8 rounded shadow">
         <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -117,6 +117,17 @@ const SignUpPage = () => {
             Sign Up
           </button>
         </form>
+
+        {/* Link to Sign In */}
+        <p className="mt-4 text-center text-gray-600">
+          Already have an account?{' '}
+          <Link
+            to="/"
+            className="text-blue-600 hover:underline"
+          >
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   );
