@@ -10,6 +10,7 @@ export function useDashboard() {
   const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
   const expiryTimeout = useRef({});
+  
 
   const fetchFiles = async () => {
     try {
@@ -53,6 +54,19 @@ export function useDashboard() {
   }
 };
 
+const handleDeleteAccount = async () => {
+
+    try {
+      await deleteAccount();
+      localStorage.clear(); // Logout cleanup
+      navigate("/");
+    } catch (error) {
+      alert("Failed to delete account.");
+      console.error(error);
+    }
+  
+};
+
 
 const confirmDelete = (fileId, fileName) => {
   if (window.confirm(`Are you sure you want to delete "${fileName}"?`)) {
@@ -92,21 +106,7 @@ const confirmDelete = (fileId, fileName) => {
     navigate('/');
   };
 
- const handleDeleteAccount = async () => {
-  const confirmed = window.confirm(
-    "Are you sure you want to delete your account and files? This action cannot be undone."
-  );
-  if (confirmed) {
-    try {
-      await deleteAccount();
-      localStorage.clear(); // Logout cleanup
-      navigate("/");
-    } catch (error) {
-      alert("Failed to delete account.");
-      console.error(error);
-    }
-  }
-};
+ 
 
 
   useEffect(() => {
