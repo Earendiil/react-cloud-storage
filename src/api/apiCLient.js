@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 
 const api = axios.create({
@@ -13,9 +12,25 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  response => response,
+  error => {
+    const isLoginRequest =
+      error.config?.url?.includes('/auth/login') &&
+      error.config?.method === 'post';
+
+    if (!isLoginRequest && error.response?.status === 401) {
+      localStorage.removeItem('user');
+      window.location.href = '/';
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+
 export const deleteAccount = async () => {
   return await api.delete("/delete");
 };
-
 
 export default api;
