@@ -10,6 +10,8 @@ export function useDashboard() {
   const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
   const expiryTimeout = useRef({});
+  const [totalSize, setTotalSize] = useState(0);
+  const MAX_TOTAL_SIZE = 50 * 1024 * 1024; 
   
 
   const fetchFiles = async () => {
@@ -21,34 +23,50 @@ export function useDashboard() {
     }
   };
 
+  const fetchTotalSize = async () => {
+  try {
+    const res = await api.get('/files/total-size');
+    setTotalSize(res.data);
+  } catch (err) {
+    console.error('Error fetching total file size:', err);
+  }
+};
+
 
   const handleUpload = async (e) => {
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  e.preventDefault();
+  if (!selectedFile) return;
 
-    e.preventDefault();
-    if (!selectedFile) return;
-    const formData = new FormData();
-
-    if (selectedFile.size > MAX_FILE_SIZE) {
-      alert("File size exceeds 5MB. Please choose a smaller file.");
-      return;
+  if (selectedFile.size > MAX_FILE_SIZE) {
+    alert("File size exceeds 5MB.");
+    return;
   }
-    formData.append('file', selectedFile);
 
-    try {
-      await api.post(`upload/${user.id}`, formData);
-      setSelectedFile(null);
-      fetchFiles();
-    } catch (err) {
-      console.error('Upload failed:', err);
-    }
-  };
+  if (totalSize + selectedFile.size > MAX_TOTAL_SIZE) {
+    alert("Upload would exceed your 50MB total storage limit.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', selectedFile);
+
+  try {
+    await api.post(`upload/${user.id}`, formData);
+    setSelectedFile(null);
+    fetchFiles();
+    fetchTotalSize(); // Update storage usage
+  } catch (err) {
+    console.error('Upload failed:', err);
+  }
+};
 
 
-  const handleDelete = async (fileId) => {
+ const handleDelete = async (fileId) => {
   try {
     await api.delete(`/user/files/${user.id}/${fileId}`);
     setFiles(prevFiles => prevFiles.filter(file => file.fileId !== fileId));
+    fetchTotalSize(); // Update usage
   } catch (err) {
     console.error('Delete failed:', err);
   }
@@ -111,6 +129,7 @@ const confirmDelete = (fileId, fileName) => {
 
   useEffect(() => {
     fetchFiles();
+    fetchTotalSize();
   }, []);
 
   
@@ -122,6 +141,8 @@ const confirmDelete = (fileId, fileName) => {
     handleDelete,
     confirmDelete,
     setSelectedFile,
+    MAX_TOTAL_SIZE,
+    totalSize,
     handleUpload,
     handleLogout,
     handleExpiryChange,

@@ -11,6 +11,8 @@ export default function DashboardPage() {
     selectedFile,
     setFiles,
     setSelectedFile,
+    totalSize,
+    MAX_TOTAL_SIZE,
     handleUpload,
     handleLogout,
     handleDelete,
@@ -72,6 +74,14 @@ export default function DashboardPage() {
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">
             Your Files
           </h2>
+          <div className="text-sm text-gray-600">
+              Storage used:&nbsp;
+              <span className={`font-medium ${
+                  totalSize / MAX_TOTAL_SIZE > 0.9 ? 'text-red-600' : 'text-gray-800'
+                }`}>
+                {(totalSize / (1024 * 1024)).toFixed(2)} MB / {(MAX_TOTAL_SIZE / (1024 * 1024)).toFixed(0)} MB
+              </span>
+            </div>
           {files.length > 0 ? (
             <ul className="space-y-4">
               {files.map((file) => (
@@ -127,7 +137,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="cursor-pointer mt-10 flex justify-center">
+      <div className="mt-10 flex justify-center">
         <button
           onClick={confirmAccountDelete}
           className="cursor-pointer bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-red-800 transition"
