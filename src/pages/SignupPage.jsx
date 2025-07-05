@@ -1,7 +1,9 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+
 import { toast } from 'react-toastify';
+import api from '../api/apiCLient';
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
@@ -23,23 +25,23 @@ const SignUpPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setFormErrors({});
+  e.preventDefault();
+  setFormErrors({});
 
-    try {
-      await axios.post('http://localhost:8080/api/create', formData);
-      toast.success('Account created! You can now log in.');
-      navigate('/');
-    } catch (err) {
-      if (err.response?.data?.errors) {
-        setFormErrors(err.response.data.errors); 
-      } else if (err.response?.data?.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Registration failed.');
-      }
+  try {
+    await api.post("/create", formData); 
+    toast.success("Account created! You can now log in.");
+    navigate("/");
+  } catch (err) {
+    if (err.response?.data?.errors) {
+      setFormErrors(err.response.data.errors);
+    } else if (err.response?.data?.message) {
+      toast.error(err.response.data.message);
+    } else {
+      toast.error("Registration failed.");
     }
-  };
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen">
