@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:8081/api",
+  baseURL: import.meta.env.VITE_BACKEND_URL || "http://23.88.57.34:8081/api",
 });
 
 api.interceptors.request.use((config) => {
