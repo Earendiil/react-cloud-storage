@@ -92,32 +92,43 @@ const confirmDelete = (fileId, fileName) => {
   }
 };
 
- const handleExpiryChange = (fileId, newDate) => {
-    if (expiryTimeout.current[fileId]) {
-      clearTimeout(expiryTimeout.current[fileId]);
-    }
+const handleExpiryChange = (fileId, newDate) => {
+  if (expiryTimeout.current[fileId]) {
+    clearTimeout(expiryTimeout.current[fileId]);
+  }
 
-    expiryTimeout.current[fileId] = setTimeout(async () => {
-      try {
-        const isoDate = new Date(newDate).toISOString();
+  expiryTimeout.current[fileId] = setTimeout(async () => {
+    try {
+      // Validate date before sending to backend
+      const inputDate = new Date(newDate);
+      const now = new Date();
+      now.setHours(0, 0, 0, 0); // start of today
+      const minDate = new Date(now.getTime() + 24 * 60 * 60 * 1000); // tomorrow start
 
-        await api.put(`/files/${fileId}/expiry`, {
-          expiryDate: isoDate,
-        });
-
-        setFiles(prevFiles =>
-          prevFiles.map(file =>
-            file.fileId === fileId ? { ...file, expiryDate: isoDate } : file
-          )
-        );
-
-        toast("Expiry date updated");
-      } catch (error) {
-        console.error(error);
-        toast.error("Error updating expiry date");
+      if (inputDate < minDate) {
+        toast.error("Expiry date must be at least tomorrow or later.");
+        return; // stop here - don't update backend or state
       }
-    }, 500); // 0.5 seconds
-  };
+
+      const isoDate = inputDate.toISOString();
+
+      await api.put(`/files/${fileId}/expiry`, {
+        expiryDate: isoDate,
+      });
+
+      setFiles(prevFiles =>
+        prevFiles.map(file =>
+          file.fileId === fileId ? { ...file, expiryDate: isoDate } : file
+        )
+      );
+
+      toast("Expiry date updated");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error updating expiry date");
+    }
+  }, 500); // 0.5 seconds debounce
+};
 
   const handleLogout = () => {
     logout();
