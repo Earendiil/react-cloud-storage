@@ -1,12 +1,9 @@
 # Step 1: Build the React app
-FROM node:20-alpine AS build
+FROM node:18 AS build
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
-
-# Accept optional env vars like VITE_CLOUD_URL, VITE_TASK_URL
+# Accept environment variables at build time
 ARG VITE_CLOUD_URL
 ARG VITE_TASK_URL
 ENV VITE_CLOUD_URL=$VITE_CLOUD_URL
@@ -14,7 +11,7 @@ ENV VITE_TASK_URL=$VITE_TASK_URL
 
 COPY . .
 
-RUN npm run build
+RUN npm install && npm run build
 
 # Step 2: Serve the build with nginx
 FROM nginx:stable-alpine
