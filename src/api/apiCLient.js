@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || "http://23.88.57.34:8081/api",
+  baseURL: import.meta.env.VITE_BACKEND_URL || "https://app2.flinkfiles.com/api",
 });
 
 api.interceptors.request.use((config) => {
